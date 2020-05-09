@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace WebApplication1.contracts
+namespace WebApplication1.Contracts
 {
     public static class ApiRouts
     {
@@ -10,9 +10,9 @@ namespace WebApplication1.contracts
         
         public static class Post
         {
-            public const string getAll = baseUrl + "/" + "posts";
-            //public static readonly string get = $"{baseUrl}/posts/";
-            //public static readonly string post = $"{baseUrl}/posts";
+            public const string GetAll = baseUrl + "/" + "posts";
+            public const string Create = baseUrl + "/" + "posts";
+            public const string Get = baseUrl + "/" + "posts/{postId}";
         }
     }
 }
