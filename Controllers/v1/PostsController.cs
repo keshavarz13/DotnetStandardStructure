@@ -67,5 +67,17 @@ namespace WebApplication1.Controllers.v1
             var location = baseUrl + "/" + ApiRouts.Post.Get.Replace("{postId}", post.Id);
             return Created(location , postResponse);
         }
+        
+        [HttpDelete(ApiRouts.Post.Delete)]
+        public IActionResult Delete([FromRoute]string postId)
+        {
+            var result = _postService.Delete(postId);
+            if (result)
+            {
+                return Ok();
+            }
+            
+            return NotFound();
+        }
     }
 }

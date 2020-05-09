@@ -42,5 +42,17 @@ namespace WebApplication1.Services.Imp
             _posts[_posts.FindIndex(x => x.Id == postToUpdate.Id)] = postToUpdate;
             return true;
         }
+
+        public bool Delete(string id)
+        {
+            var post = _posts.FirstOrDefault(x => x.Id == id);
+            if (post == null)
+            {
+                return false;
+            }
+            
+            _posts.Remove(post);
+            return true;
+        }
     }
 }

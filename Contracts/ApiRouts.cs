@@ -14,7 +14,7 @@ namespace WebApplication1.Contracts
             public const string Create = baseUrl + "/" + "posts";
             public const string Get = baseUrl + "/" + "posts/{postId}";
             public const string Update = baseUrl + "/" + "posts/{postId}";
-            
+            public const string Delete = baseUrl + "/" + "posts/{postId}";
         }
     }
 }
