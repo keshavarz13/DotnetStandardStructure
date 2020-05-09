@@ -6,6 +6,7 @@ namespace WebApplication1.Services
     public interface IPostService
     {
         List<Post> getAll();
-        Post get(string id); 
+        Post get(string id);
+        bool Update(Post postToUpdate); 
     }
 }

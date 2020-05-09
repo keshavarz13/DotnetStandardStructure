@@ -13,6 +13,8 @@ namespace WebApplication1.Contracts
             public const string GetAll = baseUrl + "/" + "posts";
             public const string Create = baseUrl + "/" + "posts";
             public const string Get = baseUrl + "/" + "posts/{postId}";
+            public const string Update = baseUrl + "/" + "posts/{postId}";
+            
         }
     }
 }

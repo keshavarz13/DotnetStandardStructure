@@ -37,6 +37,19 @@ namespace WebApplication1.Controllers.v1
             return Ok(post);
         }
         
+        [HttpPut(ApiRouts.Post.Update)]
+        public IActionResult Update([FromRoute]string postId, [FromBody] UpdatePostRequest postRequest)
+        {
+            Post realPost = new Post() {Id = postRequest.Id};
+            var result = _postService.Update(realPost);
+            if (result)
+            {
+                return Ok(postRequest);
+            }
+
+            return NotFound();
+        }
+        
         [HttpPost(ApiRouts.Post.Create)]
         public IActionResult create([FromBody] CreatePostRequest post)
         {

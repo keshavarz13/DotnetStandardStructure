@@ -14,7 +14,11 @@ namespace WebApplication1.Services.Imp
             _posts = new List<Post>();
             for (int i = 0; i < 5 ; i++)
             {
-                _posts.Add(new Post(){Id = Guid.NewGuid().ToString()});
+                _posts.Add(new Post()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = $"Post {i}"
+                });
             }  
         }
         
@@ -25,7 +29,18 @@ namespace WebApplication1.Services.Imp
 
         public Post get(string id)
         {
-            return (_posts.SingleOrDefault(x => x.Id == id));
+            return ( _posts.SingleOrDefault(x => x.Id == id));
+        }
+
+        public bool Update(Post postToUpdate)
+        {
+            var post = _posts.FirstOrDefault(x => x.Id == postToUpdate.Id);
+            if (post == null)
+            {
+                return false;
+            }
+            _posts[_posts.FindIndex(x => x.Id == postToUpdate.Id)] = postToUpdate;
+            return true;
         }
     }
 }
