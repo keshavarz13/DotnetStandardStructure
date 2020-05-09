@@ -1,30 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Contracts;
 using WebApplication1.Contracts.Requests;
 using WebApplication1.Contracts.Responses;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 namespace WebApplication1.Controllers.v1
 {
     public class PostsController : Controller
     {
-        private List<Post> _posts;
 
-        public PostsController()
+        private readonly IPostService _postService;
+        public PostsController(IPostService postService)
         {
-            _posts = new List<Post>();
-            for (int i = 0; i < 5 ; i++)
-            {
-                _posts.Add(new Post(){Id = Guid.NewGuid().ToString()});
-            }   
+            _postService = postService;
         }
 
         [HttpGet(ApiRouts.Post.GetAll)]
         public IActionResult getAll()
         {
-            return Ok(_posts);
+            return Ok(_postService.getAll());
+        }
+
+        [HttpGet(ApiRouts.Post.Get)]
+        public IActionResult Get([FromRoute]string postId)
+        {
+            var post = _postService.get(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(post);
         }
         
         [HttpPost(ApiRouts.Post.Create)]
@@ -36,7 +46,7 @@ namespace WebApplication1.Controllers.v1
             {
                 post.Id = Guid.NewGuid().ToString();
             }
-            _posts.Add(realPost);
+            _postService.getAll().Add(realPost);
             
             CreatePostResponse postResponse = new CreatePostResponse(){Id = post.Id};
             

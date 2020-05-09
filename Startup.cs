@@ -17,6 +17,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using WebApplication1.Option;
+using WebApplication1.Services;
+using WebApplication1.Services.Imp;
 
 namespace WebApplication1
 {
@@ -39,6 +41,8 @@ namespace WebApplication1
                 .AddEntityFrameworkStores<DataContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton<IPostService, PostService>();
 
             //add swagger to services-----------------------------------------------------------------------
             services.AddSwaggerGen(c =>
