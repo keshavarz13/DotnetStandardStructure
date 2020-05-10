@@ -54,5 +54,22 @@ namespace WebApplication1.Services.Imp
             _posts.Remove(post);
             return true;
         }
+
+        public bool Create(Post post)
+        {
+            var result = _posts.FirstOrDefault(x => x.Id == post.Id);
+            if (result == null)
+            {
+             
+                if (string.IsNullOrEmpty(post.Id))
+                {
+                    post.Id = Guid.NewGuid().ToString();
+                }
+                _posts.Add(post);
+                return true;   
+            }
+
+            return false;
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace WebApplication1.Services
         List<Post> getAll();
         Post get(string id);
         bool Update(Post postToUpdate); 
-        bool Delete (string id); 
+        bool Delete (string id);
+        bool Create(Post post);
     }
 }

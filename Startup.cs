@@ -45,10 +45,7 @@ namespace WebApplication1
             services.AddSingleton<IPostService, PostService>();
 
             //add swagger to services-----------------------------------------------------------------------
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}); });
             //-----------------------------------------------------------------------------------------------
         }
 
@@ -57,22 +54,22 @@ namespace WebApplication1
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-             }
+                app.UseDeveloperExceptionPage(); 
+            }
             else
             {
                 app.UseHsts();
             }
-            
+
             var swaggerOption = new SwaggerOption();
             Configuration.GetSection(nameof(SwaggerOption)).Bind(swaggerOption);
             //this lines for configure swagger---------------------------------------------------------------------------------------------------
-            app.UseSwagger(opt => { opt.RouteTemplate = swaggerOption.JsonRoute;});
-            app.UseSwaggerUI(opt => {opt.SwaggerEndpoint(swaggerOption.UIEndpoint, swaggerOption.Description); });
+            app.UseSwagger(opt => { opt.RouteTemplate = swaggerOption.JsonRoute; });
+            app.UseSwaggerUI(opt => { opt.SwaggerEndpoint(swaggerOption.UIEndpoint, swaggerOption.Description); });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             //----------------------------------------------------------------------------------------------------------------------------------- 
-                    
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

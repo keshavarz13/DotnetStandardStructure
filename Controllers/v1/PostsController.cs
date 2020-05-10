@@ -12,8 +12,8 @@ namespace WebApplication1.Controllers.v1
 {
     public class PostsController : Controller
     {
-
         private readonly IPostService _postService;
+
         public PostsController(IPostService postService)
         {
             _postService = postService;
@@ -26,19 +26,19 @@ namespace WebApplication1.Controllers.v1
         }
 
         [HttpGet(ApiRouts.Post.Get)]
-        public IActionResult Get([FromRoute]string postId)
+        public IActionResult Get([FromRoute] string postId)
         {
             var post = _postService.get(postId);
             if (post == null)
             {
                 return NotFound();
             }
-            
+
             return Ok(post);
         }
-        
+
         [HttpPut(ApiRouts.Post.Update)]
-        public IActionResult Update([FromRoute]string postId, [FromBody] UpdatePostRequest postRequest)
+        public IActionResult Update([FromRoute] string postId, [FromBody] UpdatePostRequest postRequest)
         {
             Post realPost = new Post() {Id = postRequest.Id};
             var result = _postService.Update(realPost);
@@ -49,34 +49,33 @@ namespace WebApplication1.Controllers.v1
 
             return NotFound();
         }
-        
+
         [HttpPost(ApiRouts.Post.Create)]
         public IActionResult create([FromBody] CreatePostRequest post)
         {
-            Post realPost = new Post() {Id = post.Id};
-            
-            if (string.IsNullOrEmpty(post.Id))
+            Post realPost = new Post() {Id = post.Id, Name = post.Name};
+
+            var result = _postService.Create(realPost);
+            if (!result)
             {
-                post.Id = Guid.NewGuid().ToString();
+                return BadRequest();
             }
-            _postService.getAll().Add(realPost);
-            
-            CreatePostResponse postResponse = new CreatePostResponse(){Id = post.Id};
-            
+
+            CreatePostResponse postResponse = new CreatePostResponse() {Id = post.Id};
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var location = baseUrl + "/" + ApiRouts.Post.Get.Replace("{postId}", post.Id);
-            return Created(location , postResponse);
+            return Created(location, postResponse);
         }
-        
+
         [HttpDelete(ApiRouts.Post.Delete)]
-        public IActionResult Delete([FromRoute]string postId)
+        public IActionResult Delete([FromRoute] string postId)
         {
             var result = _postService.Delete(postId);
             if (result)
             {
                 return Ok();
             }
-            
+
             return NotFound();
         }
     }
