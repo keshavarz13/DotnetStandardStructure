@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Contracts;
 using WebApplication1.Contracts.Requests;
@@ -20,15 +21,15 @@ namespace WebApplication1.Controllers.v1
         }
 
         [HttpGet(ApiRouts.Post.GetAll)]
-        public IActionResult getAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_postService.getAll());
+            return  Ok(await _postService.getAllAsync());
         }
 
         [HttpGet(ApiRouts.Post.Get)]
-        public IActionResult Get([FromRoute] string postId)
+        public async Task<IActionResult> Get([FromRoute] string postId)
         {
-            var post = _postService.get(postId);
+            var post = await _postService.getAsync(postId);
             if (post == null)
             {
                 return NotFound();
@@ -38,10 +39,10 @@ namespace WebApplication1.Controllers.v1
         }
 
         [HttpPut(ApiRouts.Post.Update)]
-        public IActionResult Update([FromRoute] string postId, [FromBody] UpdatePostRequest postRequest)
+        public async Task<IActionResult> Update([FromRoute] string postId, [FromBody] UpdatePostRequest postRequest)
         {
-            Post realPost = new Post() {Id = postRequest.Id};
-            var result = _postService.Update(realPost);
+            Post realPost = new Post() {Id = postRequest.Id , Name = postRequest.Name};
+            var result = await _postService.UpdateAsync(realPost);
             if (result)
             {
                 return Ok(postRequest);
@@ -51,11 +52,11 @@ namespace WebApplication1.Controllers.v1
         }
 
         [HttpPost(ApiRouts.Post.Create)]
-        public IActionResult create([FromBody] CreatePostRequest post)
+        public async Task<IActionResult> create([FromBody] CreatePostRequest post)
         {
             Post realPost = new Post() {Id = post.Id, Name = post.Name};
 
-            var result = _postService.Create(realPost);
+            var result = await _postService.CreateAsync(realPost);
             if (!result)
             {
                 return BadRequest();
@@ -68,9 +69,9 @@ namespace WebApplication1.Controllers.v1
         }
 
         [HttpDelete(ApiRouts.Post.Delete)]
-        public IActionResult Delete([FromRoute] string postId)
+        public async Task<IActionResult> Delete([FromRoute] string postId)
         {
-            var result = _postService.Delete(postId);
+            var result = await _postService.DeleteAsync(postId);
             if (result)
             {
                 return Ok();

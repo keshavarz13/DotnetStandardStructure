@@ -1,72 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Services.Imp
 {
     public class PostService : IPostService
     {
-        private List<Post> _posts;
+        private readonly DataContext _dataContext;
 
-        public PostService()
+        public PostService(DataContext dataContext)
         {
-            _posts = new List<Post>();
-            for (int i = 0; i < 5 ; i++)
-            {
-                _posts.Add(new Post()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = $"Post {i}"
-                });
-            }  
-        }
-        
-        public List<Post> getAll()
-        {
-            return (_posts);
+            _dataContext = dataContext;
         }
 
-        public Post get(string id)
+        public async Task<List<Post>> getAllAsync()
         {
-            return ( _posts.SingleOrDefault(x => x.Id == id));
+            return await _dataContext.Posts.ToListAsync();
         }
 
-        public bool Update(Post postToUpdate)
+        public async Task<Post> getAsync(string id)
         {
-            var post = _posts.FirstOrDefault(x => x.Id == postToUpdate.Id);
+            return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> UpdateAsync(Post postToUpdate)
+        {
+            _dataContext.Posts.Update(postToUpdate);
+            var result = await _dataContext.SaveChangesAsync();
+            return result > 0;
+        }
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var post = await _dataContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
             if (post == null)
             {
                 return false;
             }
-            _posts[_posts.FindIndex(x => x.Id == postToUpdate.Id)] = postToUpdate;
-            return true;
+
+            _dataContext.Posts.Remove(post);
+            var result = await _dataContext.SaveChangesAsync();
+            return result > 0;
         }
 
-        public bool Delete(string id)
+        public async Task<bool> CreateAsync(Post post)
         {
-            var post = _posts.FirstOrDefault(x => x.Id == id);
-            if (post == null)
-            {
-                return false;
-            }
-            
-            _posts.Remove(post);
-            return true;
-        }
-
-        public bool Create(Post post)
-        {
-            var result = _posts.FirstOrDefault(x => x.Id == post.Id);
+            var result = await _dataContext.Posts.FirstOrDefaultAsync(x => x.Id == post.Id);
             if (result == null)
             {
-             
                 if (string.IsNullOrEmpty(post.Id))
                 {
                     post.Id = Guid.NewGuid().ToString();
                 }
-                _posts.Add(post);
-                return true;   
+
+                await _dataContext.Posts.AddAsync(post);
+                await _dataContext.SaveChangesAsync();
+                return true;
             }
 
             return false;

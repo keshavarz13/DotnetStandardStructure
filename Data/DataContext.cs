@@ -7,7 +7,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Data
 {
-    public class DataContext : IdentityDbContext
+    public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
@@ -15,5 +15,10 @@ namespace WebApplication1.Data
         }
 
         public DbSet<Post> Posts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>();
+        }
     }
 }
