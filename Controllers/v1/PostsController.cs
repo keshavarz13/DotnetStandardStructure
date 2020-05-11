@@ -23,7 +23,7 @@ namespace WebApplication1.Controllers.v1
         [HttpGet(ApiRouts.Post.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            return  Ok(await _postService.getAllAsync());
+            return Ok(await _postService.getAllAsync());
         }
 
         [HttpGet(ApiRouts.Post.Get)]
@@ -41,7 +41,7 @@ namespace WebApplication1.Controllers.v1
         [HttpPut(ApiRouts.Post.Update)]
         public async Task<IActionResult> Update([FromRoute] string postId, [FromBody] UpdatePostRequest postRequest)
         {
-            Post realPost = new Post() {Id = postRequest.Id , Name = postRequest.Name};
+            Post realPost = new Post() {Id = postId, Name = postRequest.Name};
             var result = await _postService.UpdateAsync(realPost);
             if (result)
             {
@@ -54,7 +54,7 @@ namespace WebApplication1.Controllers.v1
         [HttpPost(ApiRouts.Post.Create)]
         public async Task<IActionResult> create([FromBody] CreatePostRequest post)
         {
-            Post realPost = new Post() {Id = post.Id, Name = post.Name};
+            Post realPost = new Post() {Name = post.Name};
 
             var result = await _postService.CreateAsync(realPost);
             if (!result)
@@ -62,9 +62,9 @@ namespace WebApplication1.Controllers.v1
                 return BadRequest();
             }
 
-            CreatePostResponse postResponse = new CreatePostResponse() {Id = post.Id};
+            CreatePostResponse postResponse = new CreatePostResponse() {Id = realPost.Id, Name = realPost.Name};
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var location = baseUrl + "/" + ApiRouts.Post.Get.Replace("{postId}", post.Id);
+            var location = baseUrl + "/" + ApiRouts.Post.Get.Replace("{postId}", realPost.Id);
             return Created(location, postResponse);
         }
 
